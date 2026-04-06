@@ -11,6 +11,12 @@
 - **Boss 波次**：每隔数波出现 Boss
 - **无缝重开**：开始、暂停、结算和重开逻辑已接入主场景
 
+## 截图 / 预览
+
+![启动画面截图](docs/media/start-screen.png)
+
+![启动画面 GIF 预览](docs/media/start-screen.gif)
+
 ## 运行环境
 
 - Godot `4.6.x`（项目配置当前为 `4.2` 特性集，已在本地 `Godot 4.6.2` 下验证可启动）
