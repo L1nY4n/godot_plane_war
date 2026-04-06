@@ -55,6 +55,9 @@ godot --headless --path . --quit
 
 ```text
 .
+├── docs/
+│   └── media/                 # README 中使用的截图与 GIF
+├── LICENSE                    # MIT 许可证
 ├── assets/
 │   └── models/                 # 玩家、敌机、Boss、子弹、导弹、道具 GLB 资源
 ├── scenes/
@@ -96,4 +99,3 @@ godot --headless --path . --quit
 - 补充 GitHub Actions 自动检查
 - 增加导出预设与发布流程
 - 拆分 `main.gd` 中的大型玩法逻辑为多个脚本
-
