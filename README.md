@@ -95,7 +95,5 @@ godot --headless --path . --quit
 
 ## 后续可继续完善的方向
 
-- 增加 `README` 截图 / GIF 演示
-- 补充 GitHub Actions 自动检查
 - 增加导出预设与发布流程
 - 拆分 `main.gd` 中的大型玩法逻辑为多个脚本
