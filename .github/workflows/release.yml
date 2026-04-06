@@ -10,9 +10,37 @@ permissions:
   contents: write
 
 jobs:
-  create-release:
-    name: Package And Publish Release
-    runs-on: ubuntu-latest
+  export-builds:
+    name: Export ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Linux
+            os: ubuntu-latest
+            preset: Linux
+            output: build/linux/PlaneWar.x86_64
+            asset: PlaneWar-linux-x86_64.zip
+          - label: Windows
+            os: windows-latest
+            preset: Windows Desktop
+            output: build/windows/PlaneWar.exe
+            asset: PlaneWar-windows-x86_64.zip
+          - label: macOS
+            os: macos-latest
+            preset: macOS
+            output: build/macos/PlaneWar-macos.zip
+            asset: PlaneWar-macos-universal.zip
+          - label: Web
+            os: ubuntu-latest
+            preset: Web
+            output: build/web/PlaneWar-web.zip
+            asset: PlaneWar-web.zip
+
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout
@@ -25,23 +53,63 @@ jobs:
         with:
           version: 4.6.2
           use-dotnet: false
+          include-templates: true
 
       - name: Verify project boots headlessly
         run: godot --headless --path . --quit
 
-      - name: Build release archive
+      - name: Export release build
+        run: |
+          mkdir -p "$(dirname "${{ matrix.output }}")"
+          godot --headless --path . --export-release "${{ matrix.preset }}" "${{ matrix.output }}"
+
+      - name: Package build asset
         env:
-          TAG_NAME: ${{ github.ref_name }}
+          EXPORT_OUTPUT: ${{ matrix.output }}
+          ASSET_NAME: ${{ matrix.asset }}
         run: |
           mkdir -p dist
-          git archive \
-            --format=zip \
-            --output "dist/godot_plane_war-${TAG_NAME}.zip" \
-            --prefix "godot_plane_war-${TAG_NAME}/" \
-            HEAD
+          python - <<'PY'
+          import os
+          import pathlib
+          import shutil
+          import zipfile
+
+          output = pathlib.Path(os.environ["EXPORT_OUTPUT"])
+          asset = pathlib.Path("dist") / os.environ["ASSET_NAME"]
+
+          if output.suffix == ".zip":
+            shutil.copy2(output, asset)
+          else:
+            with zipfile.ZipFile(asset, "w", zipfile.ZIP_DEFLATED) as zf:
+              zf.write(output, arcname=output.name)
+              pck = output.with_suffix(".pck")
+              if pck.exists():
+                zf.write(pck, arcname=pck.name)
+          PY
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.label }}-release
+          path: dist/${{ matrix.asset }}
+          if-no-files-found: error
+
+  create-release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+    needs: export-builds
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Download exported assets
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: dist/godot_plane_war-*.zip
+          files: release-assets/*
