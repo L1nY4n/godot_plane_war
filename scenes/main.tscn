@@ -1,0 +1,178 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8d0main99"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_font"]
+font_size = 14
+font_color = Color(1, 0.85, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 36
+font_color = Color(0.3, 0.8, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_store"]
+font_size = 14
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="UI"]
+offset_left = 320.0
+offset_top = 8.0
+offset_right = 940.0
+offset_bottom = 32.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "SCORE  0"
+label_settings = SubResource("LabelSettings_title")
+
+[node name="HPLabel" type="Label" parent="UI"]
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 200.0
+offset_bottom = 32.0
+theme_override_colors/font_color = Color(0.4, 1.0, 0.4, 1)
+text = "HP  100"
+
+[node name="WpnLabel" type="Label" parent="UI"]
+offset_left = 10.0
+offset_top = 34.0
+offset_right = 200.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(1.0, 0.85, 0.2, 1)
+text = "WPN  1"
+label_settings = SubResource("LabelSettings_font")
+
+[node name="ShieldLabel" type="Label" parent="UI"]
+offset_left = 760.0
+offset_top = 34.0
+offset_right = 860.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(0.4, 0.7, 1.0, 1)
+text = ""
+label_settings = SubResource("LabelSettings_font")
+
+[node name="MissileCount" type="Label" parent="UI"]
+offset_left = 220.0
+offset_top = 34.0
+offset_right = 400.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(1.0, 0.5, 0.2, 1)
+text = "MISSILE  5"
+label_settings = SubResource("LabelSettings_font")
+
+[node name="WaveLabel" type="Label" parent="UI"]
+offset_left = 700.0
+offset_top = 34.0
+offset_right = 950.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(0.7, 0.9, 1.0, 1)
+text = "WARMUP"
+horizontal_alignment = 2
+label_settings = SubResource("LabelSettings_font")
+
+[node name="StoreLabel" type="Label" parent="UI"]
+offset_left = 10.0
+offset_top = 58.0
+offset_right = 950.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+text = ""
+label_settings = SubResource("LabelSettings_store")
+
+[node name="StartScreen" type="Control" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="UI/StartScreen"]
+offset_left = 280.0
+offset_top = 300.0
+offset_right = 680.0
+offset_bottom = 380.0
+theme_override_colors/font_color = Color(0.3, 0.8, 1, 1)
+text = "飞机大战"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_title")
+
+[node name="Start" type="Label" parent="UI/StartScreen"]
+offset_left = 280.0
+offset_top = 550.0
+offset_right = 680.0
+offset_bottom = 585.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "按 SPACE 开始"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_font")
+
+[node name="Help" type="Label" parent="UI/StartScreen"]
+offset_left = 180.0
+offset_top = 650.0
+offset_right = 780.0
+offset_bottom = 685.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "WASD / 方向键 = 移动 | SPACE = 开始/重开 | ESC = 暂停"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_font")
+
+[node name="WpnInfo" type="Label" parent="UI/StartScreen"]
+offset_left = 180.0
+offset_top = 695.0
+offset_right = 780.0
+offset_bottom = 720.0
+theme_override_colors/font_color = Color(1.0, 0.85, 0.2, 1)
+text = "菱形=武器升级 | 十字=HP恢复 | 圆=护盾 | 八边=导弹 / 红核=炸弹"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_font")
+
+[node name="GameOver" type="Control" parent="UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GOText" type="Label" parent="UI/GameOver"]
+offset_left = 220.0
+offset_top = 450.0
+offset_right = 740.0
+offset_bottom = 530.0
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+text = "GAME OVER"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_title")
+
+[node name="ScoreText" type="Label" parent="UI/GameOver"]
+offset_left = 220.0
+offset_top = 540.0
+offset_right = 740.0
+offset_bottom = 575.0
+theme_override_colors/font_color = Color(1, 1, 0.7, 1)
+text = "SCORE  0"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_font")
+
+[node name="HighText" type="Label" parent="UI/GameOver"]
+offset_left = 220.0
+offset_top = 585.0
+offset_right = 740.0
+offset_bottom = 620.0
+theme_override_colors/font_color = Color(1, 1, 0.7, 1)
+text = "HI-SCORE  0"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_font")
+
+[node name="Restart" type="Label" parent="UI/GameOver"]
+offset_left = 220.0
+offset_top = 660.0
+offset_right = 740.0
+offset_bottom = 695.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "按 SPACE 重新开始"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_font")

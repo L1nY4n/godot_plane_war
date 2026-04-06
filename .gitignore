@@ -1,0 +1,6 @@
+.godot/
+.omx/
+.DS_Store
+.godot-*.log
+.claude/
+.git-push-verify.log
