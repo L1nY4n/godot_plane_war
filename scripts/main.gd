@@ -393,10 +393,10 @@ func _input(ev: InputEvent) -> void:
 		elif _ui_over.visible and not _running:
 			_restart()
 	if ev is InputEventKey and ev.pressed and ev.keycode == KEY_ESCAPE:
-		if _running:
-			_pause()
-		elif _paused:
+		if _paused:
 			_unpause()
+		elif _running:
+			_pause()
 	if ev is InputEventKey and ev.pressed:
 		match ev.keycode:
 			KEY_Q: _release_stored(PickupType.MISSILE)
