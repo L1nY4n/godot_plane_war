@@ -111,19 +111,67 @@ def build_player():
     root = add_empty("player_ship")
     dark = make_material("player_dark", (0.08, 0.14, 0.2), emission=(0.0, 0.12, 0.2), metallic=0.25, roughness=0.28)
     accent = make_material("player_accent", (0.2, 0.48, 0.72), emission=(0.0, 0.35, 0.55), metallic=0.08, roughness=0.16)
+    trim = make_material("player_trim", (0.6, 0.9, 1.0), emission=(0.12, 0.7, 0.95), metallic=0.02, roughness=0.08)
     canopy = make_material("player_canopy", (0.4, 0.82, 1.0), emission=(0.12, 0.45, 0.7), metallic=0.02, roughness=0.08, alpha=0.72)
     glow = make_material("player_glow", (0.7, 0.95, 1.0), emission=(0.2, 0.8, 1.0), metallic=0.0, roughness=0.04)
 
     parts = [
-        add_cube("body", (0, 0.18, 0.0), (0.42, 0.18, 1.3), dark),
-        add_cube("nose", (0, 0.28, -1.34), (0.22, 0.12, 0.46), accent),
-        add_cube("wing", (0, 0.08, 0.18), (1.12, 0.04, 0.52), dark),
-        add_uv_sphere("canopy", (0, 0.32, -0.35), 0.22, canopy),
-        add_uv_sphere("core", (0, 0.18, 0.2), 0.12, glow),
+        add_cube("body_core", (0, 0.18, 0.08), (0.34, 0.18, 1.45), dark),
+        add_cube("body_spine", (0, 0.42, 0.1), (0.18, 0.1, 1.0), accent),
+        add_cube("nose", (0, 0.24, -1.45), (0.14, 0.08, 0.5), accent, rotation=(math.radians(12), 0, 0)),
+        add_cube("nose_cheek_l", (-0.12, 0.16, -0.92), (0.08, 0.06, 0.34), dark, rotation=(0, math.radians(18), math.radians(18))),
+        add_cube("nose_cheek_r", (0.12, 0.16, -0.92), (0.08, 0.06, 0.34), dark, rotation=(0, math.radians(-18), math.radians(-18))),
+        add_cube("keel", (0, -0.02, 0.42), (0.1, 0.08, 0.62), dark),
+        add_uv_sphere("canopy", (0, 0.35, -0.52), 0.2, canopy),
+        add_uv_sphere("core", (0, 0.2, 0.2), 0.1, glow),
+        add_cube("trim_line", (0, 0.26, 0.16), (0.05, 0.04, 1.08), trim),
     ]
     for side in (-1, 1):
-        parts.append(add_cube(f"tail_fin_{side}", (side * 0.32, 0.4, 0.92), (0.1, 0.24, 0.34), dark))
-        parts.append(add_cylinder(f"engine_{side}", (side * 0.28, 0.05, 0.92), 0.13, 0.55, accent, rotation=(math.radians(90), 0, 0)))
+        parts.append(add_cube(
+            f"wing_root_{side}",
+            (side * 0.56, 0.1, 0.06),
+            (0.62, 0.045, 0.68),
+            dark,
+            rotation=(0, 0, math.radians(side * 18)),
+        ))
+        parts.append(add_cube(
+            f"wing_tip_{side}",
+            (side * 1.1, 0.08, 0.22),
+            (0.38, 0.035, 0.42),
+            accent,
+            rotation=(0, 0, math.radians(side * 30)),
+        ))
+        parts.append(add_cube(
+            f"canard_{side}",
+            (side * 0.34, 0.14, -0.86),
+            (0.18, 0.025, 0.18),
+            trim,
+            rotation=(0, 0, math.radians(side * 26)),
+        ))
+    for side in (-1, 1):
+        parts.append(add_cube(
+            f"tail_fin_{side}",
+            (side * 0.26, 0.42, 0.98),
+            (0.08, 0.26, 0.42),
+            dark,
+            rotation=(0, 0, math.radians(side * 8)),
+        ))
+        parts.append(add_cube(
+            f"tail_plane_{side}",
+            (side * 0.45, 0.12, 1.0),
+            (0.26, 0.03, 0.22),
+            accent,
+            rotation=(0, 0, math.radians(side * 14)),
+        ))
+        parts.append(add_cylinder(
+            f"engine_{side}",
+            (side * 0.24, 0.02, 1.02),
+            0.13,
+            0.68,
+            dark,
+            rotation=(math.radians(90), 0, 0),
+        ))
+        parts.append(add_uv_sphere(f"engine_glow_{side}", (side * 0.24, 0.02, 1.38), 0.07, trim))
     for part in parts:
         parent_keep(part, root)
     export_root(root, "player_ship.glb")
@@ -133,11 +181,16 @@ def build_wingman():
     reset_scene()
     root = add_empty("wingman_drone")
     dark = make_material("wingman_dark", (0.08, 0.22, 0.36), emission=(0.0, 0.12, 0.18), metallic=0.22, roughness=0.28)
+    accent = make_material("wingman_accent", (0.18, 0.62, 0.72), emission=(0.0, 0.42, 0.55), metallic=0.02, roughness=0.12)
     eye = make_material("wingman_eye", (0.55, 0.95, 1.0), emission=(0.12, 0.75, 0.55), metallic=0.0, roughness=0.06)
     parts = [
-        add_cube("body", (0, 0.12, 0), (0.23, 0.1, 0.5), dark),
-        add_cube("wing", (0, 0.06, 0.1), (0.5, 0.025, 0.22), dark),
-        add_uv_sphere("eye", (0, 0.18, -0.32), 0.1, eye),
+        add_cube("body", (0, 0.12, 0.02), (0.18, 0.09, 0.54), dark),
+        add_cube("nose", (0, 0.16, -0.42), (0.08, 0.05, 0.16), accent, rotation=(math.radians(14), 0, 0)),
+        add_cube("wing", (0, 0.06, 0.08), (0.44, 0.02, 0.2), dark),
+        add_cube("wing_l", (-0.34, 0.06, 0.08), (0.18, 0.02, 0.16), accent, rotation=(0, 0, math.radians(20))),
+        add_cube("wing_r", (0.34, 0.06, 0.08), (0.18, 0.02, 0.16), accent, rotation=(0, 0, math.radians(-20))),
+        add_cube("fin", (0, 0.28, 0.24), (0.05, 0.14, 0.2), accent),
+        add_uv_sphere("eye", (0, 0.2, -0.28), 0.085, eye),
     ]
     for part in parts:
         parent_keep(part, root)
@@ -148,11 +201,15 @@ def build_enemy_light():
     reset_scene()
     root = add_empty("enemy_light")
     red = make_material("enemy_light_red", (0.45, 0.1, 0.14), emission=(0.45, 0.08, 0.05), metallic=0.18, roughness=0.36)
+    plate = make_material("enemy_light_plate", (0.72, 0.16, 0.18), emission=(0.3, 0.05, 0.02), metallic=0.12, roughness=0.28)
     eye = make_material("enemy_light_eye", (1.0, 0.82, 0.35), emission=(1.0, 0.5, 0.08), metallic=0.0, roughness=0.05)
     parts = [
-        add_cube("body", (0, 0.12, 0), (0.31, 0.11, 0.58), red),
-        add_cube("wing", (0, 0.06, 0.12), (0.58, 0.02, 0.17), red),
-        add_uv_sphere("eye", (0, 0.18, -0.28), 0.11, eye),
+        add_cube("body", (0, 0.11, 0.0), (0.22, 0.1, 0.6), red),
+        add_cube("nose", (0, 0.12, -0.42), (0.09, 0.06, 0.18), plate, rotation=(math.radians(18), 0, 0)),
+        add_cube("wing_l", (-0.34, 0.05, 0.1), (0.34, 0.02, 0.14), plate, rotation=(0, 0, math.radians(22))),
+        add_cube("wing_r", (0.34, 0.05, 0.1), (0.34, 0.02, 0.14), plate, rotation=(0, 0, math.radians(-22))),
+        add_cube("tail", (0, 0.18, 0.28), (0.05, 0.14, 0.18), red),
+        add_uv_sphere("eye", (0, 0.17, -0.24), 0.09, eye),
     ]
     for part in parts:
         parent_keep(part, root)
@@ -163,14 +220,21 @@ def build_enemy_mid():
     reset_scene()
     root = add_empty("enemy_mid")
     orange = make_material("enemy_mid_orange", (0.48, 0.22, 0.08), emission=(0.45, 0.18, 0.04), metallic=0.2, roughness=0.34)
+    armor = make_material("enemy_mid_armor", (0.72, 0.34, 0.12), emission=(0.25, 0.1, 0.02), metallic=0.12, roughness=0.2)
     visor = make_material("enemy_mid_visor", (1.0, 0.76, 0.32), emission=(1.0, 0.48, 0.1), metallic=0.0, roughness=0.05)
     parts = [
-        add_cube("body", (0, 0.15, 0), (0.48, 0.14, 0.88), orange),
-        add_cube("wing", (0, 0.06, 0.1), (0.9, 0.03, 0.38), orange),
-        add_cube("visor", (0, 0.24, -0.52), (0.17, 0.07, 0.25), visor),
+        add_cube("body", (0, 0.16, 0.0), (0.34, 0.13, 0.94), orange),
+        add_cube("backpack", (0, 0.24, 0.46), (0.22, 0.12, 0.28), armor),
+        add_cube("wing_core", (0, 0.06, 0.1), (0.58, 0.03, 0.28), orange),
+        add_cube("wing_l", (-0.58, 0.05, 0.14), (0.34, 0.025, 0.28), armor, rotation=(0, 0, math.radians(16))),
+        add_cube("wing_r", (0.58, 0.05, 0.14), (0.34, 0.025, 0.28), armor, rotation=(0, 0, math.radians(-16))),
+        add_cube("nose_l", (-0.13, 0.14, -0.58), (0.06, 0.05, 0.18), armor, rotation=(math.radians(12), math.radians(14), 0)),
+        add_cube("nose_r", (0.13, 0.14, -0.58), (0.06, 0.05, 0.18), armor, rotation=(math.radians(12), math.radians(-14), 0)),
+        add_cube("visor", (0, 0.23, -0.46), (0.16, 0.06, 0.22), visor),
     ]
     for side in (-1, 1):
-        parts.append(add_cylinder(f"engine_{side}", (side * 0.62, 0.1, 0.44), 0.12, 0.45, orange, rotation=(math.radians(90), 0, 0)))
+        parts.append(add_cylinder(f"engine_{side}", (side * 0.52, 0.08, 0.42), 0.12, 0.52, orange, rotation=(math.radians(90), 0, 0)))
+        parts.append(add_uv_sphere(f"thruster_{side}", (side * 0.52, 0.08, 0.72), 0.07, visor))
     for part in parts:
         parent_keep(part, root)
     export_root(root, "enemy_mid.glb")
@@ -180,14 +244,20 @@ def build_enemy_heavy():
     reset_scene()
     root = add_empty("enemy_heavy")
     purple = make_material("enemy_heavy_purple", (0.24, 0.07, 0.32), emission=(0.32, 0.08, 0.42), metallic=0.28, roughness=0.3)
+    armor = make_material("enemy_heavy_armor", (0.55, 0.12, 0.62), emission=(0.18, 0.02, 0.3), metallic=0.14, roughness=0.22)
     core = make_material("enemy_heavy_core", (1.0, 0.72, 0.35), emission=(1.0, 0.42, 0.1), metallic=0.0, roughness=0.05)
     parts = [
-        add_cube("body", (0, 0.22, 0), (0.78, 0.2, 1.25), purple),
-        add_cube("wing", (0, 0.08, 0.12), (1.35, 0.04, 0.68), purple),
-        add_uv_sphere("core", (0, 0.28, -0.38), 0.18, core),
+        add_cube("body", (0, 0.24, 0.08), (0.58, 0.18, 1.35), purple),
+        add_cube("armor_top", (0, 0.42, -0.08), (0.34, 0.1, 0.68), armor),
+        add_cube("wing_core", (0, 0.08, 0.16), (0.92, 0.04, 0.58), purple),
+        add_cube("wing_l", (-0.96, 0.08, 0.22), (0.42, 0.03, 0.46), armor, rotation=(0, 0, math.radians(12))),
+        add_cube("wing_r", (0.96, 0.08, 0.22), (0.42, 0.03, 0.46), armor, rotation=(0, 0, math.radians(-12))),
+        add_cube("spine", (0, 0.56, 0.4), (0.12, 0.18, 0.34), armor),
+        add_uv_sphere("core", (0, 0.26, -0.34), 0.16, core),
     ]
     for side in (-1, 1):
-        parts.append(add_cylinder(f"cannon_{side}", (side * 0.86, 0.14, -0.22), 0.16, 0.75, purple, rotation=(math.radians(90), 0, 0)))
+        parts.append(add_cylinder(f"cannon_{side}", (side * 0.82, 0.16, -0.22), 0.15, 0.9, purple, rotation=(math.radians(90), 0, 0)))
+        parts.append(add_cube(f"shield_{side}", (side * 0.62, 0.18, 0.08), (0.18, 0.12, 0.42), armor, rotation=(0, 0, math.radians(side * 18))))
     for part in parts:
         parent_keep(part, root)
     export_root(root, "enemy_heavy.glb")
@@ -198,19 +268,30 @@ def build_boss():
     root = add_empty("boss_flagship")
     dark = make_material("boss_dark", (0.24, 0.07, 0.16), emission=(0.24, 0.02, 0.08), metallic=0.28, roughness=0.28)
     armor = make_material("boss_armor", (0.42, 0.12, 0.24), emission=(0.32, 0.04, 0.16), metallic=0.18, roughness=0.22)
+    trim = make_material("boss_trim", (0.72, 0.22, 0.38), emission=(0.45, 0.08, 0.2), metallic=0.06, roughness=0.16)
     core = make_material("boss_core", (1.0, 0.84, 0.92), emission=(1.0, 0.24, 0.52), metallic=0.0, roughness=0.04)
     canopy = make_material("boss_canopy", (0.36, 0.78, 1.0), emission=(0.2, 0.7, 1.0), metallic=0.02, roughness=0.08, alpha=0.75)
     parts = [
-        add_cube("hull", (0, 0.45, 0), (2.4, 0.42, 3.0), dark),
-        add_cube("wing", (0, 0.14, 0.4), (3.7, 0.06, 1.0), dark),
-        add_cube("armor", (0, 0.82, -0.4), (1.0, 0.21, 1.4), armor),
-        add_uv_sphere("canopy", (0, 0.9, -1.15), 0.52, canopy),
-        add_uv_sphere("core", (0, 0.68, -0.15), 0.42, core),
+        add_cube("hull", (0, 0.42, 0.1), (1.8, 0.34, 3.2), dark),
+        add_cube("nose", (0, 0.38, -1.95), (0.48, 0.16, 0.66), trim, rotation=(math.radians(12), 0, 0)),
+        add_cube("wing_core", (0, 0.14, 0.55), (3.15, 0.06, 1.1), dark),
+        add_cube("armor", (0, 0.82, -0.35), (0.92, 0.18, 1.54), armor),
+        add_cube("bridge", (0, 1.06, -0.72), (0.44, 0.16, 0.52), trim),
+        add_uv_sphere("canopy", (0, 0.96, -1.18), 0.46, canopy),
+        add_uv_sphere("core", (0, 0.68, -0.18), 0.38, core),
+        add_cube("keel", (0, 0.08, 1.12), (0.2, 0.1, 0.8), armor),
     ]
     for side in (-1, 1):
-        blade = add_cube(f"blade_{side}", (side * 2.35, 0.18, 0.55), (0.6, 0.11, 1.15), armor, rotation=(0, 0, math.radians(side * 20)))
-        thruster = add_cylinder(f"thruster_{side}", (side * 2.1, 0.22, 2.15), 0.28, 0.72, dark, rotation=(math.radians(90), 0, 0))
-        parts.extend([blade, thruster])
+        parts.extend([
+            add_cube(f"wing_panel_a_{side}", (side * 1.8, 0.14, 0.42), (0.92, 0.05, 0.72), armor, rotation=(0, 0, math.radians(side * 12))),
+            add_cube(f"wing_panel_b_{side}", (side * 2.78, 0.12, 0.82), (0.78, 0.05, 0.52), trim, rotation=(0, 0, math.radians(side * 24))),
+            add_cube(f"blade_{side}", (side * 2.15, 0.24, -0.72), (0.32, 0.1, 1.08), armor, rotation=(math.radians(8), 0, math.radians(side * 18))),
+            add_cube(f"shoulder_{side}", (side * 0.96, 0.62, -0.18), (0.28, 0.16, 0.72), trim, rotation=(0, 0, math.radians(side * 8))),
+            add_cylinder(f"thruster_{side}", (side * 2.46, 0.22, 2.42), 0.24, 0.92, dark, rotation=(math.radians(90), 0, 0)),
+            add_uv_sphere(f"thruster_glow_{side}", (side * 2.46, 0.22, 2.92), 0.14, core),
+        ])
+    for side in (-1, 1):
+        parts.append(add_cube(f"prong_{side}", (side * 0.52, 0.22, -2.05), (0.08, 0.08, 0.42), trim, rotation=(math.radians(16), math.radians(side * 10), 0)))
     for part in parts:
         parent_keep(part, root)
     export_root(root, "boss_flagship.glb")

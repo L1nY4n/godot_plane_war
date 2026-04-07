@@ -115,7 +115,7 @@ offset_top = 650.0
 offset_right = 780.0
 offset_bottom = 685.0
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-text = "WASD / 方向键 = 移动 | SPACE = 开始/重开 | ESC = 暂停"
+text = "WASD / 方向键 = 移动 | 相机自适应位置 | SPACE = 开始/重开 | ESC = 暂停"
 horizontal_alignment = 1
 label_settings = SubResource("LabelSettings_font")
 

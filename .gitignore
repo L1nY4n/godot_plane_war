@@ -4,3 +4,5 @@
 .godot-*.log
 .claude/
 .git-push-verify.log
+__pycache__/
+*.pyc

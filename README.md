@@ -59,11 +59,13 @@ godot --headless --path . --quit
 │   └── media/                 # README 中使用的截图与 GIF
 ├── LICENSE                    # MIT 许可证
 ├── assets/
-│   └── models/                 # 玩家、敌机、Boss、子弹、导弹、道具 GLB 资源
+│   ├── models/                 # 玩家、敌机、Boss、子弹、导弹、道具 GLB 资源
+│   └── baked_models/           # 预烘焙 PackedScene（运行时优先加载）
 ├── scenes/
 │   └── main.tscn               # 主场景（HUD、开始界面、结算界面）
 ├── scripts/
 │   ├── main.gd                 # 核心玩法逻辑
+│   ├── build_baked_models.gd   # 生成 baked_models 的 Godot 脚本
 │   └── build_glb_assets_blender.py
 ├── project.godot               # Godot 项目入口
 └── README.md
@@ -92,6 +94,12 @@ godot --headless --path . --quit
 - Boss：`boss_flagship.glb`
 - 子弹/导弹：`player_bullet.glb`, `enemy_bullet.glb`, `homing_missile.glb`
 - 道具：`pickup_weapon.glb`, `pickup_heal.glb`, `pickup_shield.glb`, `pickup_bomb.glb`, `pickup_missile.glb`
+
+`assets/baked_models/` 中包含对应的预烘焙 `*.tscn` 版本，运行时会优先尝试加载以降低首次模型解析成本。若需重新生成可执行：
+
+```bash
+godot --headless --path . -s scripts/build_baked_models.gd
+```
 
 ## 后续可继续完善的方向
 
