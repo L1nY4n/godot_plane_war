@@ -35,7 +35,7 @@ jobs:
           - label: Web
             os: ubuntu-latest
             preset: Web
-            output: build/web/PlaneWar-web.zip
+            output: build/web/index.html
             asset: PlaneWar-web.zip
 
     defaults:
@@ -80,6 +80,11 @@ jobs:
 
           if output.suffix == ".zip":
             shutil.copy2(output, asset)
+          elif output.suffix == ".html":
+            with zipfile.ZipFile(asset, "w", zipfile.ZIP_DEFLATED) as zf:
+              for path in sorted(output.parent.glob(output.stem + ".*")):
+                if path.is_file():
+                  zf.write(path, arcname=path.name)
           else:
             with zipfile.ZipFile(asset, "w", zipfile.ZIP_DEFLATED) as zf:
               zf.write(output, arcname=output.name)
