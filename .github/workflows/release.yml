@@ -31,7 +31,7 @@ jobs:
             os: macos-latest
             preset: macOS
             output: build/macos/PlaneWar-macos.zip
-            asset: PlaneWar-macos-universal.zip
+            asset: PlaneWar-macos-x86_64.zip
           - label: Web
             os: ubuntu-latest
             preset: Web
