@@ -277,7 +277,8 @@ var _ui_game_over_high: Label
 var _ui_store: Label
 
 # --- 3D World ---
-var _use_3d := true
+var _is_web_build := OS.has_feature("web")
+var _use_3d := not _is_web_build
 const MODEL_PLAYER_PATH := "res://assets/models/player_ship.glb"
 const MODEL_WINGMAN_PATH := "res://assets/models/wingman_drone.glb"
 const MODEL_ENEMY_LIGHT_PATH := "res://assets/models/enemy_light.glb"
@@ -428,7 +429,8 @@ func _setup_background() -> void:
 	_stars.clear()
 	_nebulae.clear()
 
-	for _i in 240:
+	var star_count := 120 if _is_web_build else 240
+	for _i in star_count:
 		var star := StarPoint.new()
 		star.pos = Vector2(randf_range(-20.0, VW + 20.0), randf_range(0, VH))
 		star.speed = randf_range(12.0, 240.0)
@@ -444,7 +446,8 @@ func _setup_background() -> void:
 		Color(0.74, 0.22, 0.48),
 		Color(0.18, 0.12, 0.32),
 	]
-	for i in 8:
+	var nebula_count := 4 if _is_web_build else 8
+	for i in nebula_count:
 		var nebula := Nebula.new()
 		nebula.pos = Vector2(randf_range(-40.0, VW + 40.0), randf_range(40.0, VH - 40.0))
 		nebula.radius = randf_range(110.0, 240.0)
